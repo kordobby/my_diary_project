@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Document</title>
+
+<script>
+$(document).ready(function () {
+        show_profile();
+});
+
+    function save_profile(){
+        let profile = $('#profile').val()
+        $.ajax({
+        type: "POST",
+        url: "/login",
+        data: { name_give: profile },
+        success: function(response){
+           alert(response['msg'])
+            window.location.reload()
+        }
+        })
+    }
+
+    function update_profile(){
+        let current_profile = $('#profile-input').text();
+        let current = current_profile.split(' ')[1];
+        let update = $('#new-profile').val();
+        $.ajax({
+        type: "POST",
+        url: "/login",
+        data: { current_give : current, update_give: update },
+        success: function(response){
+           alert(response['msg'])
+            window.location.reload()
+        }
+        })
+    }
+
+    function show_profile() {
+        $.ajax({
+            type: 'GET',
+            url: '/login',
+            data: {},
+            success: function (response) {
+                let rows = response['profiles'];
+                let name = rows[0]['name'];
+                let temp_html = `Welcome ${name}`;
+                $('#profile-input').text(temp_html);
+            }
+        });
+    }
+
+</script>
+
+</head>
+<body>
+    <form id="login-form" onclick= "show_profile()">
+        <label for="profile">ID<input id="profile" type="text" placeholder="ID를 입력하세요." /></label>
+        <input onclick="save_profile(), show_profile()" type="submit" value = "login" required/>
+    </form>
+
+    <div id="main-page">
+        <span id="profile-input"></span>
+    </div>
+
+    <form id="update-form" onclick= "show_profile()">
+        <label for="new-profile">ID<input id="new-profile" type="text" placeholder="ID를 입력하세요." /></label>
+        <input onclick="update_profile(), show_profile()" type="submit" value = "login" required/>
+    </form>
+</body>
+</html>
