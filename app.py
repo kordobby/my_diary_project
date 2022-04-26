@@ -22,7 +22,7 @@ def main_profile_post():
    db.login.insert_one(doc)
    return jsonify({'msg': '프로필 저장 완료!'})
 
-@app.route("/login", methods=["POST"])
+@app.route("/login", methods=["PUT"])
 def update_profile_post():
    current_receive = request.form['current_give']
    update_receive = request.form['update_give']
