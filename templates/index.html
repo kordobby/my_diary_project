@@ -1,122 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <title>Document</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <meta charset="UTF-8"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <title>Document</title>
+      <link rel="preconnect" href="https://fonts.googleapis.com"/>
 
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Dongle:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/index_style.css') }}"
-    />
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='image/diary-icon.png') }}"
-    />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+      <link
+              href="https://fonts.googleapis.com/css2?family=Dongle:wght@400;700&display=swap"
+              rel="stylesheet"
+      />
+      <script src="https://kit.fontawesome.com/79ab9960f1.js" crossorigin="anonymous"></script>
+      <link
+              rel="stylesheet"
+              href="{{ url_for('static', filename='css/index_style.css') }}"
+      />
+      <link
+              rel="stylesheet"
+              href="{{ url_for('static', filename='image/diary-icon.png') }}"
+      />
 
-    <script>
-      $(document).ready(function () {
-        show_profile();
-      });
+      <script>
+          $(document).ready(function () {
+              show_profile();
+          });
 
-      function save_profile() {
-        let profile = $("#profile").val();
-        $.ajax({
-          type: "POST",
-          url: "/login",
-          data: { name_give: profile },
-          success: function (response) {
-            alert(response["msg"]);
-            window.location.reload();
-          },
-        });
-      }
+          function save_profile() {
+              let profile = $("#profile").val();
+              $.ajax({
+                  type: "POST",
+                  url: "/login",
+                  data: {name_give: profile},
+                  success: function (response) {
+                      alert(response["msg"]);
+                      window.location.reload();
+                  },
+              });
+          }
 
-      function update_profile() {
-        let current_profile = $("#profile-input").text();
-        let current = current_profile.split(" ")[1];
-        let update = $("#new-profile").val();
-        $.ajax({
-          type: "PUT",
-          url: "/login",
-          data: { current_give: current, update_give: update },
-          success: function (response) {
-            alert(response["msg"]);
-            window.location.reload();
-          },
-        });
-      }
+          function update_profile() {
+              let current_profile = $("#profile-input").text();
+              let current = current_profile.split(" ")[1];
+              let update = $("#new-profile").val();
+              $.ajax({
+                  type: "PUT",
+                  url: "/login",
+                  data: {current_give: current, update_give: update},
+                  success: function (response) {
+                      alert(response["msg"]);
+                      window.location.reload();
+                  },
+              });
+          }
 
-      function show_profile() {
-        $.ajax({
-          type: "GET",
-          url: "/login",
-          data: {},
-          success: function (response) {
-            let rows = response["profiles"];
-            for (let i = 0; i < rows.length; i++) {
-              let name = rows[i]["name"];
-              if (rows.length == 0) {
-                alert("닉네임을 입력해주세요!");
-              } else {
-                $("#main-page").show();
-                $("#login-form").hide();
-              }
-              let temp_html = `<span>${name}</span>`;
-              $("#profile-input").append(temp_html);
-            }
-          },
-        });
-      }
-    </script>
+          function show_profile() {
+              $.ajax({
+                  type: "GET",
+                  url: "/login",
+                  data: {},
+                  success: function (response) {
+                      let rows = response["profiles"];
+                      for (let i = 0; i < rows.length; i++) {
+                          let name = rows[i]["name"];
+                          if (rows.length == 0) {
+                              alert("닉네임을 입력해주세요!");
+                          } else {
+                              $("#main-page").show();
+                              $("#profilePage").hide();
+                          }
+                          let temp_html = `<span>Welcome ${name}</span>`;
+                          $("#profile-input").append(temp_html);
+                      }
+                  },
+              });
+          }
+
+          const dateCount = document.querySelector("#sailDay");
+
+          function counter() {
+              var dday = new Date("Sep 7,2022,09:00:00").getTime(); //디데이
+              setInterval(function () {
+                  var now = new Date();
+                  var distance = dday - now;
+                  var d = Math.floor(distance / (1000 * 60 * 60 * 24));
+                  var s = Math.floor((distance % (1000 * 60)) / 1000);
+                  if (s < 10) {
+                      s = '0' + s;
+                  }
+                  $('#sailDay').html('D - ' + d + 'd')
+              }, 1000);
+          }
+
+          counter();
+
+          function openUpdateForm() {
+            const updateForm = document.getElementById("update-form");
+            updateForm.classList.toggle("hidden");
+          }
+
+
+      </script>
   </head>
 
   <body>
-    <div class="profile-page">
+  <div class="profile-page" id="profilePage">
       <div class="create-box">
-        <div class="create-box__icon">
-          <img src="{{ url_for('static', filename='image/hello.PNG') }}" />
-        </div>
-        <div class="create-box__greeting">
-          <span>Welcome!asdf</span>
-          <span>Let's make profile!</span>
-        </div>
-        <form id="login-form" class="create-box__form">
-          <label for="profile"
-            ><input id="profile" type="text" placeholder="ID를 입력하세요."
-          /></label>
-          <input
-            class="create-box__button"
-            onclick="save_profile(), show_profile()"
-            type="submit"
-            value="login"
-            required
-          />
-        </form>
+          <div class="create-box__icon">
+              <img src="{{ url_for('static', filename='image/hello.PNG') }}"/>
+          </div>
+          <div class="create-box__greeting">
+              <span>Welcome!</span>
+              <span>Let's make profile!</span>
+          </div>
+          <form id="login-form" class="create-box__form">
+              <label for="profile"
+              ><input id="profile" type="text" placeholder="닉네임을 입력하세요."
+              /></label>
+              <input
+                      class="create-box__button"
+                      onclick="save_profile()"
+                      type="submit"
+                      value="login"
+                      required
+              />
+          </form>
       </div>
-    </div>
+  </div>
 
-    <div id="main-page">
-      <span id="profile-input"></span>
-    </div>
+  <main id="main-page" class="main-page">
+      <div class="main__header">
+          <button id="updateBtn" class="update-btn" onclick="openUpdateForm()">
+              <i class="fa-solid fa-pencil"></i>
+          </button>
 
-    <form id="update-form">
-      <label for="new-profile"
-        >ID<input id="new-profile" type="text" placeholder="ID를 입력하세요."
-      /></label>
-      <input
-        onclick="update_profile(), show_profile()"
-        type="submit"
-        value="login"
-        required
-      />
-    </form>
+          <form id="update-form" class="update-forms hidden">
+              <label for="new-profile"><input id="new-profile" type="text" placeholder="새로운 닉네임을 입력하세요."/></label>
+              <input id="update-save" onclick="update_profile()" value="💾" type="submit" value="" required/>
+          </form>
+
+      </div>
+      <div class="main__title">
+          <img src="{{ url_for('static', filename='image/hello.PNG') }}"/>
+          <span id="profile-input"></span>
+      </div>
+      <div class="main__menu">
+          <div class="main__menu--icons">
+              <div class="menu-icon">
+                  <div></div>
+                  <i class="fa-solid fa-book"></i>
+              </div>
+              <span>Diary</span>
+          </div>
+          <div class="main__menu--icons">
+              <div class="menu-icon">
+                  <div></div>
+                  <i class="fa-solid fa-calendar-check"></i>
+              </div>
+              <span>BUCKET LIST</span>
+          </div>
+          <div class="main__menu--icons">
+              <div class="menu-icon">
+                  <div></div>
+                  <i class="fa-solid fa-heart"></i>
+              </div>
+              <span>To-Do list</span>
+          </div>
+      </div>
+      <div id="sailDay" class="main__d-day">
+      </div>
+  </main>
+
+
   </body>
 </html>
