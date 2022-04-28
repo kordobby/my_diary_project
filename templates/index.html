@@ -41,13 +41,11 @@
           }
 
           function update_profile() {
-              let current_profile = $("#profile-input").text();
-              let current = current_profile.split(" ")[1];
               let update = $("#new-profile").val();
               $.ajax({
                   type: "PUT",
                   url: "/login",
-                  data: {current_give: current, update_give: update},
+                  data: {update_give: update},
                   success: function (response) {
                       alert(response["msg"]);
                       window.location.reload();
@@ -64,13 +62,14 @@
                       let rows = response["profiles"];
                       for (let i = 0; i < rows.length; i++) {
                           let name = rows[i]["name"];
+                          let num = rows[i]["num"];
                           if (rows.length == 0) {
                               alert("닉네임을 입력해주세요!");
                           } else {
                               $("#main-page").show();
                               $("#profilePage").hide();
                           }
-                          let temp_html = `<span>Welcome ${name}</span>`;
+                          let temp_html = `<span>${name}'s diary</span>`;
                           $("#profile-input").append(temp_html);
                       }
                   },

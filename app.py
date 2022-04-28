@@ -16,7 +16,11 @@ def home():
 @app.route("/login", methods=["POST"])
 def main_profile_post():
    name_receive = request.form['name_give']
+
+   profile_list = list(db.login.find({}, {'_id':False}))
+   count = len(profile_list) + 1
    doc = {
+      'num':count,
       'name':name_receive
    }
    db.login.insert_one(doc)
@@ -24,9 +28,8 @@ def main_profile_post():
 
 @app.route("/login", methods=["PUT"])
 def update_profile_post():
-   current_receive = request.form['current_give']
    update_receive = request.form['update_give']
-   db.login.update_one({'name' : current_receive}, {'$set': {'name': update_receive}})
+   db.login.update_one({'num' : 1}, {'$set': {'name': update_receive}})
    return jsonify({'msg': '프로필 저장 완료!'})
 
 @app.route("/login", methods=["GET"])
