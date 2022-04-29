@@ -28,8 +28,9 @@ def main_profile_post():
 
 @app.route("/login", methods=["PUT"])
 def update_profile_post():
+   index_receive = request.form['index_give']
    update_receive = request.form['update_give']
-   db.login.update_one({'num' : 1}, {'$set': {'name': update_receive}})
+   db.login.update_one({'num' : int(index_receive)}, {'$set': {'name': update_receive}})
    return jsonify({'msg': '프로필 저장 완료!'})
 
 @app.route("/login", methods=["GET"])

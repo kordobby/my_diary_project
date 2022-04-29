@@ -41,11 +41,12 @@
           }
 
           function update_profile() {
+              let index = $('.new-nickname').data('name-index')
               let update = $("#new-profile").val();
               $.ajax({
                   type: "PUT",
                   url: "/login",
-                  data: {update_give: update},
+                  data: {index_give: index, update_give: update},
                   success: function (response) {
                       alert(response["msg"]);
                       window.location.reload();
@@ -69,7 +70,7 @@
                               $("#main-page").show();
                               $("#profilePage").hide();
                           }
-                          let temp_html = `<span>${name}'s diary</span>`;
+                          let temp_html = `<span class = "new-nickname" data-name-index="${num}">${name}'s diary</span>`;
                           $("#profile-input").append(temp_html);
                       }
                   },
